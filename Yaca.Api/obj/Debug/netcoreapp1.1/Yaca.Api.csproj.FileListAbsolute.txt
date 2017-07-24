@@ -1,0 +1,8 @@
+C:\Users\daviba\Documents\Yaca\Yaca.Api\bin\Debug\netcoreapp1.1\Yaca.Api.deps.json
+C:\Users\daviba\Documents\Yaca\Yaca.Api\bin\Debug\netcoreapp1.1\Yaca.Api.runtimeconfig.json
+C:\Users\daviba\Documents\Yaca\Yaca.Api\bin\Debug\netcoreapp1.1\Yaca.Api.runtimeconfig.dev.json
+C:\Users\daviba\Documents\Yaca\Yaca.Api\bin\Debug\netcoreapp1.1\Yaca.Api.dll
+C:\Users\daviba\Documents\Yaca\Yaca.Api\bin\Debug\netcoreapp1.1\Yaca.Api.pdb
+C:\Users\daviba\Documents\Yaca\Yaca.Api\obj\Debug\netcoreapp1.1\Yaca.Api.AssemblyInfo.cs
+C:\Users\daviba\Documents\Yaca\Yaca.Api\obj\Debug\netcoreapp1.1\Yaca.Api.dll
+C:\Users\daviba\Documents\Yaca\Yaca.Api\obj\Debug\netcoreapp1.1\Yaca.Api.pdb
