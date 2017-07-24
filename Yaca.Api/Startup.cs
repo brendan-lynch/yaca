@@ -38,6 +38,7 @@ namespace Yaca.Api
             loggerFactory.AddDebug();
 
             app.UseMvc();
+            app.UseStaticFiles();
         }
     }
 }
