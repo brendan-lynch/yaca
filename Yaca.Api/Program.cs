@@ -13,11 +13,12 @@ namespace Yaca.Api
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
-                .UseKestrel()
+                .UseKestrel().UseUrls("http://0.0.0.0:8080")
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 //.UseIISIntegration()
                 .UseStartup<Startup>()
-                .Build();
+                .Build()
+                ;
 
             host.Run();
         }
