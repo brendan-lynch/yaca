@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Yaca.Api;
@@ -10,9 +11,8 @@ namespace Yaca.Api.Controllers
     [Route("api/[controller]")]
     public class MessagesController : Controller
     {
-
         [HttpPost("hello")]
-        public ApiResponse Hello(HelloCommand hello)
+        public ApiResponse Hello([FromBody] HelloCommand hello)
         {
             Console.WriteLine(hello.Command);
             Console.WriteLine(hello.UserId);
@@ -43,31 +43,32 @@ namespace Yaca.Api.Controllers
         }
 
         [HttpPost("send")]
-        public ApiResponse Send(Message msg)
+        public ApiResponse Send([FromBody] Message msg)
         {
+            Broadcast.BroadcastReceiver.BroadcastToUser("dab", msg);
+
             return new ApiResponse("send") { Message = "Sent", Result = "OK" };
         }
 
-        [HttpGet("receive")]
-        public MessageResponse Receive()
+        [HttpGet("receive/{user}")]
+        public MessageResponse Receive(string user)
         {
-            System.Threading.Thread.Sleep(5200);
 
-            return new MessageResponse("receive")
-            {
-                Result = "OK",
-                Message = "Messages",
-                Data = new Message[]
+            MessageResponse resp = null;
+            ManualResetEvent mre = new ManualResetEvent(false);
+            
+            Broadcast.BroadcastReceiver.SetBroadcastCallback(user, (Message msg) => {             
+                resp = new MessageResponse("receive") 
                 {
-                    new Message()
-                    {
-                        Source = "mother",
-                        Target = "General",
-                        Content = "Another message here",
-                        Timestamp = DateTime.Now
-                    }
-                }
-            };
+                    Result = "OK",
+                    Message = null,
+                    Data = new Message[] { msg } };
+                mre.Set();
+            });
+
+            mre.WaitOne();
+
+            return resp;
         }
 
         // // GET api/values
