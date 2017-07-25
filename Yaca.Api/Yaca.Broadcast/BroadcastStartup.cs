@@ -11,13 +11,9 @@ namespace Yaca.Api.Broadcast
         {
         }
 
-        public void BroadcastMessage(Message msg, IEnumerable<string> recipeints)
+        public void BroadcastMessage(Message msg)
         {
-            foreach(var user in recipeints)
-            {
-                BroadcastReceiver.BroadcastToUser(user, msg);
-            }
+            // Do a lookup for the groups
         }
     }
-
 }
