@@ -6,6 +6,6 @@ namespace Yaca.Api
     public class Group
     {
         public string Name { get; set; }
-        public IEnumerable<Message> History { get; set; }
+        public IEnumerable<Models.Message> History { get; set; }
     }
 }

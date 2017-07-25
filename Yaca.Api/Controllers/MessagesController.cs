@@ -17,52 +17,49 @@ namespace Yaca.Api.Controllers
             Console.WriteLine(hello.Command);
             Console.WriteLine(hello.UserId);
 
-            // Forward Call to services for "auth"
-            return new HelloResponse(hello.Command) 
+            // Query all group IDs:
+            var broadcast = new Broadcast.BroadcastStartup();
+            
+            string[] groups = broadcast.GetGroups(hello.UserId);
+
+            // With all groups, query messages:
+            var t = new Messages.MessagesStartup();
+            
+            var resp = new HelloResponse(hello.Command);
+            var gs = new List<Group>();
+            resp.Result = "OK";
+            resp.Message = hello.UserId;
+            
+            foreach(var group in groups)
             {
-                 Result = "OK", 
-                 Message = hello.UserId, 
-                 Groups = new Group[] 
-                 {
-                      new Group() 
-                      {
-                           Name = "General", 
-                           History = new Message[] 
-                           {
-                                new Message() 
-                                { 
-                                    Content = "Message here", 
-                                    Source = "mother", 
-                                    Target = "General", 
-                                    Timestamp = DateTime.Now.AddHours(-2) 
-                                } 
-                            }
-                        }
-                    }
-            };
+                gs.Add( new Group() { Name = group, History = t.GetMessagesForGroup(group) });
+            }
+
+            resp.Groups = gs;
+            return resp;
         }
 
         [HttpPost("send")]
-        public ApiResponse Send([FromBody] Message msg)
+        public ApiResponse Send([FromBody] Models.Message msg)
         {
-            Broadcast.BroadcastReceiver.BroadcastToUser("dab", msg);
+            var t = new Messages.MessagesStartup();
+            t.SendMessage(msg);
 
             return new ApiResponse("send") { Message = "Sent", Result = "OK" };
         }
 
-        [HttpGet("receive/{user}")]
-        public MessageResponse Receive(string user)
+        [HttpGet("receive/{user}/{group}")]
+        public MessageResponse Receive(string user, string group)
         {
-
             MessageResponse resp = null;
             ManualResetEvent mre = new ManualResetEvent(false);
             
-            Broadcast.BroadcastReceiver.SetBroadcastCallback(user, (Message msg) => {             
+            Broadcast.BroadcastReceiver.SetBroadcastCallback(user, group, (Models.Message msg) => {             
                 resp = new MessageResponse("receive") 
                 {
                     Result = "OK",
                     Message = null,
-                    Data = new Message[] { msg } };
+                    Data = new Models.Message[] { msg } };
                 mre.Set();
             });
 
